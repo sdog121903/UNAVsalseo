@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.gitignore
+.env*
+!.env.local
+*.md
+.DS_Store
+.vercel
+coverage
+build
+out
+npm-debug.log*
+yarn-debug.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+next-env.d.ts

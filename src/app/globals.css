@@ -1,26 +1,24 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-maroon-950: #1a0a0e;
+  --color-maroon-900: #2d1118;
+  --color-maroon-800: #4a1a25;
+  --color-maroon-700: #6b2533;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background: linear-gradient(165deg, var(--color-maroon-950) 0%, var(--color-maroon-900) 35%, var(--color-maroon-800) 65%, var(--color-maroon-700) 100%);
+  min-height: 100vh;
+}
+
+/*
+ * Fallback for browsers that don't support backdrop-filter.
+ * Cards and header get a solid semi-transparent background instead.
+ */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .backdrop-blur-xl {
+    background-color: rgba(26, 10, 14, 0.92) !important;
+  }
 }
