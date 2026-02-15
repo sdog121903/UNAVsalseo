@@ -12,6 +12,7 @@ import {
   recordFetch,
 } from "@/lib/rate-limit";
 import FeedbackModal from "@/components/FeedbackModal";
+import FirstTimeWelcomeModal from "@/components/FirstTimeWelcomeModal";
 import ShareButton from "@/components/ShareButton";
 
 // ===== Configuration =====
@@ -19,6 +20,7 @@ const PAGE_SIZE = 15;
 const MASONRY_GAP = 16;
 const FEEDBACK_DELAY_MS = 5 * 60 * 1000;
 const FEEDBACK_SESSION_KEY = "sg_feedback_shown";
+const WELCOME_SHOWN_KEY = "sg_welcome_shown";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -29,6 +31,7 @@ export default function Home() {
   const [refreshing, setRefreshing] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [masonryReady, setMasonryReady] = useState(false);
   const router = useRouter();
 
@@ -208,6 +211,14 @@ export default function Home() {
       }
     }, FEEDBACK_DELAY_MS);
     return () => clearTimeout(timer);
+  }, []);
+
+  // ===== First-time welcome popup (once per device) =====
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!localStorage.getItem(WELCOME_SHOWN_KEY)) {
+      setShowWelcome(true);
+    }
   }, []);
 
   // ===== MASONRY ENGINE =====
@@ -439,19 +450,19 @@ export default function Home() {
 
                     <div className="px-4 pb-3 pt-1 flex items-center justify-between text-[13px] text-white/50">
                       <span>{timeAgo(post.created_at)}</span>
-                      <div className="flex items-center gap-5">
+                      <div className="flex items-center gap-4">
                         <ShareButton
                           postId={post.id}
                           postContent={post.content}
-                          className="text-white/40 hover:text-white/80"
+                          className="text-white hover:text-white/90"
                         />
                         <button
                           onClick={() => handleLike(post.id, post.likes)}
                           disabled={maxedOut}
-                          className={`flex items-center gap-1.5 transition-colors ${
+                          className={`rounded-full border-2 border-white bg-white/15 hover:bg-white/25 h-11 min-w-11 px-3 flex items-center justify-center gap-1.5 transition-colors ${
                             maxedOut
-                              ? "text-white/20 cursor-not-allowed"
-                              : "text-white/50 hover:text-red-400"
+                              ? "text-white/20 cursor-not-allowed opacity-60"
+                              : "text-white/90 hover:text-red-400"
                           }`}
                           title={
                             maxedOut
@@ -459,10 +470,10 @@ export default function Home() {
                               : `${left} like${left !== 1 ? "s" : ""} left`
                           }
                         >
-                          <span className={maxedOut ? "" : "text-red-400/80"}>
+                          <span className={`text-lg ${maxedOut ? "" : "text-red-400/90"}`}>
                             &#9829;
                           </span>
-                          <span>{post.likes}</span>
+                          <span className="text-[15px] font-medium">{post.likes}</span>
                         </button>
                       </div>
                     </div>
@@ -508,10 +519,19 @@ export default function Home() {
       {/* ===== CREATE POST CTA ===== */}
       <button
         onClick={() => router.push("/create")}
-        className="fixed bottom-6 right-6 z-20 w-14 h-14 bg-white/10 backdrop-blur-xl border border-white/20 text-white text-2xl font-bold rounded-full shadow-lg hover:bg-white/20 transition-colors flex items-center justify-center"
+        className="fixed bottom-6 right-6 z-20 w-23 h-23 bg-white text-black text-6xl font-bold rounded-full shadow-lg hover:bg-gray-100 transition-colors flex items-center justify-center"
       >
         +
       </button>
+
+      {/* First-time welcome — once per device */}
+      <FirstTimeWelcomeModal
+        open={showWelcome}
+        onClose={() => {
+          setShowWelcome(false);
+          localStorage.setItem(WELCOME_SHOWN_KEY, "true");
+        }}
+      />
 
       {/* Feedback Modal — once per session, after 5 min */}
       <FeedbackModal

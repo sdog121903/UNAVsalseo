@@ -188,7 +188,7 @@ export default function CreatePost() {
         </div>
 
         {/* Image upload */}
-        <div className="mt-3">
+        <div className="mt-1">
           {imagePreview ? (
             <div className="relative rounded-2xl overflow-hidden border border-white/15">
               <img
@@ -207,12 +207,12 @@ export default function CreatePost() {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={rateLimited}
-              className="w-full border-2 border-dashed border-white/15 rounded-2xl py-6 flex flex-col items-center gap-2 text-white/30 hover:border-white/30 hover:text-white/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full border-2 border-dashed border-white/15 rounded-2xl py-12 flex flex-col items-center gap-3 text-white/30 hover:border-white/30 hover:text-white/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
+                width="48"
+                height="48"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -224,8 +224,8 @@ export default function CreatePost() {
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <polyline points="21 15 16 10 5 21" />
               </svg>
-              <span className="text-sm font-medium">Add an image</span>
-              <span className="text-xs">JPEG, PNG, GIF, WebP &middot; Max 5 MB</span>
+              <span className="text-base font-medium">Add an image</span>
+              <span className="text-sm">JPEG, PNG, GIF, WebP &middot; Max 5 MB</span>
             </button>
           )}
 

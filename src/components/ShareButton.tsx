@@ -41,13 +41,13 @@ export default function ShareButton({
   return (
     <button
       onClick={handleShare}
-      className={`flex items-center gap-1 transition-colors ${className}`}
+      className={`rounded-full border-2 border-white bg-white/15 hover:bg-white/25 w-11 h-11 flex items-center justify-center transition-colors ${className}`}
       title="Share this post"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
+        width="22"
+        height="22"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
