@@ -10,7 +10,7 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "Un@vSalseo",
-  description: "Anonymous social posting via QR code",
+  description: "anonymous social posting for students in pamplona",
   icons: {
     icon: "/assets/logosalseo-nobg.png",
     apple: "/assets/logosalseo-nobg.png",
