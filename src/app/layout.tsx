@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} antialiased font-sans`}>
         <AnalyticsProvider>{children}</AnalyticsProvider>
+        <Analytics />
       </body>
     </html>
   );
