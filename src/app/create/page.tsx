@@ -7,6 +7,7 @@ import { canPost, recordPost, postsRemaining } from "@/lib/rate-limit";
 import { trackEvent } from "@/lib/analytics";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const POSTING_DISABLED = true;
 
 export default function CreatePost() {
   const [content, setContent] = useState("");
@@ -69,6 +70,8 @@ export default function CreatePost() {
   };
 
   const handleSubmit = async () => {
+    if (POSTING_DISABLED) return;
+
     const trimmed = content.trim();
     if (!trimmed) return;
 
@@ -138,12 +141,19 @@ export default function CreatePost() {
         >
           &larr; Back
         </button>
-        <h1 className="text-lg font-bold text-white">New Post</h1>
+        <h1 className="text-lg font-bold text-white">
+          {POSTING_DISABLED ? "Create Post (Disabled)" : "New Post"}
+        </h1>
         <div className="w-12" />
       </header>
 
       {/* Form */}
       <main className="max-w-lg mx-auto px-4 py-6">
+        {POSTING_DISABLED && (
+          <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl text-sm text-yellow-300">
+            Posting has been temporarily disabled due to community guidelines. The create button remains visible for future use.
+          </div>
+        )}
         {rateLimited && (
           <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-sm text-red-300">
             You&apos;ve reached the post limit (3 per 10 minutes). Try again in{" "}
@@ -169,12 +179,14 @@ export default function CreatePost() {
             placeholder={
               rateLimited
                 ? "Please wait before posting again..."
+                : POSTING_DISABLED
+                ? "Posting is currently disabled"
                 : "What's on your mind?"
             }
             rows={4}
             className="w-full resize-none outline-none bg-transparent text-white text-[15px] placeholder-white/30"
             autoFocus
-            disabled={rateLimited}
+            disabled={rateLimited || POSTING_DISABLED}
           />
 
           <div className="mt-2 text-right text-sm text-white/30">
@@ -206,7 +218,7 @@ export default function CreatePost() {
           ) : (
             <button
               onClick={() => fileInputRef.current?.click()}
-              disabled={rateLimited}
+              disabled={rateLimited || POSTING_DISABLED}
               className="w-full border-2 border-dashed border-white/15 rounded-2xl py-12 flex flex-col items-center gap-3 text-white/30 hover:border-white/30 hover:text-white/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
@@ -241,7 +253,7 @@ export default function CreatePost() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          disabled={submitting || content.trim().length === 0 || rateLimited}
+          disabled={submitting || content.trim().length === 0 || rateLimited || POSTING_DISABLED}
           className="mt-4 w-full bg-white/15 border border-white/20 text-white py-3 rounded-2xl font-semibold text-base hover:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           {submitting
@@ -250,6 +262,8 @@ export default function CreatePost() {
               : "Posting..."
             : rateLimited
               ? "Rate Limited"
+              : POSTING_DISABLED
+              ? "Posting Disabled"
               : "Post"}
         </button>
       </main>
